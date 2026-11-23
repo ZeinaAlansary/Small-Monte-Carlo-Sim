@@ -1,3 +1,5 @@
+# importing all libraries
+
 import datetime as dt
 
 import matplotlib.pyplot as plt
@@ -7,6 +9,7 @@ import yfinance as yf
 # import data
 
 
+# get_data function to get ans sort stock data from yahoo
 def get_data(stocks, start, end):
     stockData = yf.download(stocks, start=start, end=end, auto_adjust=True)
     stockData = stockData["Close"]
@@ -16,13 +19,16 @@ def get_data(stocks, start, end):
     return meanReturns, covMatrix
 
 
+# setting the list of stocks, start date, and end date
 stockList = ["CBA", "BHP", "TLS", "NAB", "WBC", "STO"]
 stocks = [stock + ".AX" for stock in stockList]
 endDate = dt.datetime.now()
 startDate = endDate - dt.timedelta(days=300)
 
+# getting my mean returns from the get_data function
 meanReturns, covMatrix = get_data(stocks, startDate, endDate)
 
+# setting the weights
 weights = np.random.random(len(meanReturns))
 weights /= np.sum(weights)
 
@@ -44,6 +50,7 @@ for m in range(mc_sims):
         np.cumprod(np.inner(weights, dailyReturns.T) + 1) * initialPortfolio
     )
 
+# creating a plot with the portfolio values and # of days since investing
 plt.plot(portfolio_sims)
 plt.ylabel("Portfolio Values ($)")
 plt.xlabel("Days")
